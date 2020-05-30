@@ -22,7 +22,7 @@ object ZenHubMock extends ZenHub {
       |  ]
       |}""".stripMargin
 
-  override def setPipeline(n: IssueNumber, p: PipelineId): Unit = println(p)
+  override def setPipeline(n: IssueNumber, p: PipelineId): Unit = ()
 
-  override def setEstimate(n: IssueNumber, e: Estimate): Unit = println(e)
+  override def setEstimate(n: IssueNumber, e: Estimate): Unit = ()
 }
