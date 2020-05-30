@@ -12,7 +12,11 @@ trait GitHub {
 
   def issue: String
 
-  def create(t: Title, b: Body, l: LabelName, a: Option[AssigneeName]): String
+  def create(t: Title, b: Body, l: LabelName, a: AssigneeName): String
+}
+
+object GitHub {
+  def di(b: Boolean): GitHub = if (b) GitHubApi else GitHubMock
 }
 
 case class $IssueNumber(number: Int) {

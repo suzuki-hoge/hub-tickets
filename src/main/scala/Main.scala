@@ -1,7 +1,7 @@
 import attrs.domain._
 import attrs.transfer.AttrsRepositoryImpl
-import attrs.transfer.git_hub.GitHubMock
-import attrs.transfer.zen_hub.ZenHubMock
+import attrs.transfer.git_hub.GitHub
+import attrs.transfer.zen_hub.ZenHub
 import cask.endpoints.postJson
 import cask.{MainRoutes, Request, get}
 import command.domain.issue.CreateRequest
@@ -11,13 +11,14 @@ import ujson.{Arr, Obj}
 
 object Main extends MainRoutes {
 
-  private val gitHub = GitHubMock
-  private val zenHub = ZenHubMock
+  Config.initialize("~/Documents/tmp")
+
+  private val gitHub = GitHub.di(true)
+  private val zenHub = ZenHub.di(true)
 
   private val issues = IssueRepositoryImpl(gitHub, zenHub)
   private val attrs = AttrsRepositoryImpl(gitHub, zenHub)
 
-  Config.initialize("~/Documents/tmp")
   Store.initialize(attrs)
 
   @get("/attrs/labels")

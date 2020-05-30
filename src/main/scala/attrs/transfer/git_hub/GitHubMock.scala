@@ -34,7 +34,7 @@ object GitHubMock extends GitHub {
     |  ]
     |}""".stripMargin
 
-  override def create(t: Title, b: Body, l: LabelName, a: Option[AssigneeName]): String = {
+  override def create(t: Title, b: Body, l: LabelName, a: AssigneeName): String = {
     """{
       |  "number": 1
       |}""".stripMargin
