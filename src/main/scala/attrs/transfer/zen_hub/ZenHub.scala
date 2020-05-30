@@ -33,8 +33,6 @@ object $Estimate {
 
 case class $Pipeline(id: String, name: String) {
   def toAttrs: Pipeline = Pipeline(PipelineId(id), PipelineName(name))
-
-  def asDefaultId: DefaultPipelineId = DefaultPipelineId(id)
 }
 
 object $Pipeline {

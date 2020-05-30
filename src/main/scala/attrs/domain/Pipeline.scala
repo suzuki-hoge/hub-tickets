@@ -1,6 +1,8 @@
 package attrs.domain
 
-case class Pipeline(id: PipelineId, name: PipelineName)
+case class Pipeline(id: PipelineId, name: PipelineName) {
+  def asDefault: DefaultPipelineId = DefaultPipelineId(id.v)
+}
 
 case class PipelineId(v: String) {
 }

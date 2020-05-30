@@ -3,11 +3,11 @@ package attrs.transfer.git_hub
 import attrs.domain._
 
 object GitHubApi extends GitHub {
-  override def fetchLabels: String = ???
+  override def labels: String = ???
 
-  override def fetchAssignees: String = ???
+  override def assignees: String = ???
 
-  override def fetchMilestones: String = ???
+  override def milestones: String = ???
 
   override def issue: String = ???
 

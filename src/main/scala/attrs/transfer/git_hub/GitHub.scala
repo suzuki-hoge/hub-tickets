@@ -4,11 +4,11 @@ import attrs.domain._
 import play.api.libs.json.{Json, Reads}
 
 trait GitHub {
-  def fetchLabels: String
+  def labels: String
 
-  def fetchAssignees: String
+  def assignees: String
 
-  def fetchMilestones: String
+  def milestones: String
 
   def issue: String
 

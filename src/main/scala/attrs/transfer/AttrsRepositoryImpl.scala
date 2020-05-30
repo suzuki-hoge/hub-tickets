@@ -8,12 +8,12 @@ import play.api.libs.json.Json
 case class AttrsRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends AttrsRepository {
   override def create(milestone: Milestone): Unit = ???
 
-  override def labels: Seq[Label] = Json.parse(gitHub.fetchLabels)
+  override def labels: Seq[Label] = Json.parse(gitHub.labels)
     .validate[Seq[$Label]].get
     .filter(_.using)
     .map(_.toAttrs)
 
-  override def assignees: Seq[Assignee] = Json.parse(gitHub.fetchAssignees)
+  override def assignees: Seq[Assignee] = Json.parse(gitHub.assignees)
     .validate[Seq[$Assignee]].get
     .map(_.toAttrs)
 
@@ -21,7 +21,7 @@ case class AttrsRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends AttrsRepo
     .validate[Seq[$Pipeline]].get
     .map(_.toAttrs)
 
-  override def currentMilestoneName: CurrentMilestoneName = Json.parse(gitHub.fetchMilestones)
+  override def currentMilestoneName: CurrentMilestoneName = Json.parse(gitHub.milestones)
     .validate[Seq[$Milestone]]
     .get.sortBy(_.due_on).reverse
     .map($m => CurrentMilestoneName($m.title)).head
