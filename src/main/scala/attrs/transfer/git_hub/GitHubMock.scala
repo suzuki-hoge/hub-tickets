@@ -21,6 +21,19 @@ object GitHubMock extends GitHub {
       |  { "title": "sprint 2", "state": "open", "due_on": "2020-04-14T00:00:00Z" }
       |]""".stripMargin
 
+  override def issue: String =
+  """{
+    |  "number"   : 1,
+    |  "title"    : "first issue",
+    |  "body"     : "some body",
+    |  "labels"   : [
+    |    { "name" : "dev - feature", "color": "c5def5" }
+    |  ],
+    |  "assignees": [
+    |    { "login": "suzuki-hoge", "avatar_url": "https://avatars3.githubusercontent.com/u/18749992?v=4" }
+    |  ]
+    |}""".stripMargin
+
   override def create(t: Title, b: Body, l: LabelName, a: Option[AssigneeName]): String = {
     println(t, b, l, a)
 

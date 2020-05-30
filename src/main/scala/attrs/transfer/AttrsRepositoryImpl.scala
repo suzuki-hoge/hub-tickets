@@ -17,7 +17,7 @@ case class AttrsRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends AttrsRepo
     .validate[Seq[$Assignee]].get
     .map(_.toAttrs)
 
-  override def pipelines: Seq[Pipeline] = (Json.parse(zenHub.fetchPipelines) \ "pipelines")
+  override def pipelines: Seq[Pipeline] = (Json.parse(zenHub.pipelines) \ "pipelines")
     .validate[Seq[$Pipeline]].get
     .map(_.toAttrs)
 

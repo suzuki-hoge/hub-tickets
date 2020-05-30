@@ -9,5 +9,7 @@ object GitHubApi extends GitHub {
 
   override def fetchMilestones: String = ???
 
+  override def issue: String = ???
+
   override def create(t: Title, b: Body, l: LabelName, a: Option[AssigneeName]): String = ???
 }

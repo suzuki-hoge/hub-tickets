@@ -10,6 +10,8 @@ trait GitHub {
 
   def fetchMilestones: String
 
+  def issue: String
+
   def create(t: Title, b: Body, l: LabelName, a: Option[AssigneeName]): String
 }
 
@@ -19,6 +21,12 @@ case class $IssueNumber(number: Int) {
 
 object $IssueNumber {
   implicit val jsonReads: Reads[$IssueNumber] = Json.reads[$IssueNumber]
+}
+
+case class $GIssue(number: Int, title: String, body: String, labels: Seq[$Label], assignees: Seq[$Assignee])
+
+object $GIssue {
+  implicit val jsonReads: Reads[$GIssue] = Json.reads[$GIssue]
 }
 
 case class $Label(name: String, color: String) {

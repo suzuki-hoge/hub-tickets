@@ -3,7 +3,17 @@ package attrs.transfer.zen_hub
 import attrs.domain.{Estimate, IssueNumber, PipelineId}
 
 object ZenHubMock extends ZenHub {
-  override def fetchPipelines: String =
+  override def pipeline(n: IssueNumber): String =
+    """{
+      |  "pipeline": { "pipeline_id": "1" }
+      |}""".stripMargin
+
+  override def estimate(n: IssueNumber): String =
+    """{
+      |  "estimate": { "value": 5 }
+      |}""".stripMargin
+
+  override def pipelines: String =
     """{
       |  "pipelines": [
       |    { "id": "1", "name": "backlog" },
