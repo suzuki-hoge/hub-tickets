@@ -26,9 +26,9 @@ class AttrsRepositoryImplTest extends FunSuite {
     )
   }
 
-  test("currentMilestoneName") {
+  test("currentMilestone") {
     assert(
-      sut.currentMilestoneName == CurrentMilestoneName("sprint 2")
+      sut.currentMilestoneNumber == CurrentMilestoneNumber(2)
     )
   }
 }

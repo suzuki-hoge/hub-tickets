@@ -30,7 +30,7 @@ case class IssueRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends IssueRepo
 
   override def create(req: CreateRequest): IssueNumber = {
     val n = Json.parse(
-      gitHub.create(req.creation.t, req.creation.b.getOrElse(Body("")), req.creation.l, req.creation.a.getOrElse(AssigneeName("")))
+      gitHub.create(req.creation.t, req.creation.b.getOrElse(Body("")), req.creation.l, req.creation.a, req.creation.m)
     ).validate[$IssueNumber].get.toAttrs
 
     zenHub.setPipeline(n, req.creation.p)

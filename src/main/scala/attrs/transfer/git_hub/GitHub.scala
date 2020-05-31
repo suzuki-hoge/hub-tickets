@@ -12,7 +12,7 @@ trait GitHub {
 
   def issue: String
 
-  def create(t: Title, b: Body, l: LabelName, a: AssigneeName): String
+  def create(t: Title, b: Body, l: LabelName, a: Option[AssigneeName], m: CurrentMilestoneNumber): String
 }
 
 object GitHub {
@@ -51,8 +51,8 @@ object $Assignee {
   implicit val jsonReads: Reads[$Assignee] = Json.reads[$Assignee]
 }
 
-case class $Milestone(title: String, due_on: String) {
-  def toAttrs: CurrentMilestoneName = CurrentMilestoneName(title)
+case class $Milestone(number: Int, due_on: String) {
+  def toAttrs: CurrentMilestoneNumber = CurrentMilestoneNumber(number)
 }
 
 object $Milestone {

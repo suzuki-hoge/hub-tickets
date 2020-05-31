@@ -9,7 +9,7 @@ trait AttrsRepository {
 
   def pipelines: Seq[Pipeline]
 
-  def currentMilestoneName: CurrentMilestoneName
+  def currentMilestoneNumber: CurrentMilestoneNumber
 
   // create
 

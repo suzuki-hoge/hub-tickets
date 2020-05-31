@@ -1,7 +1,7 @@
-import attrs.domain._
 import attrs.transfer.AttrsRepositoryImpl
 import attrs.transfer.git_hub.GitHub
 import attrs.transfer.zen_hub.ZenHub
+import attrs.validator.{Validator => V}
 import cask.endpoints.postJson
 import cask.{MainRoutes, Request, get}
 import command.domain.issue.CreateRequest
@@ -37,21 +37,14 @@ object Main extends MainRoutes {
   )
 
   @postJson("/command/issue/create")
-  def create(title: String, body: String, label: String, assignee: String, pipeline: String, estimate: Int): Obj = {
+  def create(title: String, body: String, label: String, assignee: String, pipeline: String, estimate: Float): Obj = {
     val store = Store.read
 
-    val req = CreateRequest.of(
-      Title(title),
-      Some(body).filter(_.nonEmpty).map(Body),
-      LabelName(label),
-      Some(assignee).filter(_.nonEmpty).map(AssigneeName),
-      store.ps.filter(_.name.v == pipeline).map(_.id).headOption,
-      Estimate(estimate),
-      store.defP,
-      attrs.currentMilestoneName
-    )
-
-    Obj("number" -> issues.create(req).v)
+    (for {
+      t <- V.title(title); b <- V.body(body); l <- V.labelName(label, store.ls); a <- V.assigneeName(assignee, store.as); p <- V.pipelineId(pipeline, store.ps); e <- V.estimate(estimate)
+    } yield CreateRequest.of(t, b, l, a, p, e, store.defP, attrs.currentMilestoneNumber))
+      .map(issues.create)
+      .fold(s => Obj("error" -> s), n => Obj("number" -> n.v))
   }
 
   initialize()

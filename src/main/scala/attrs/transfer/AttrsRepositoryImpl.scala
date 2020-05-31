@@ -21,8 +21,8 @@ case class AttrsRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends AttrsRepo
     .validate[Seq[$Pipeline]].get
     .map(_.toAttrs)
 
-  override def currentMilestoneName: CurrentMilestoneName = Json.parse(gitHub.milestones)
+  override def currentMilestoneNumber: CurrentMilestoneNumber = Json.parse(gitHub.milestones)
     .validate[Seq[$Milestone]]
     .get.sortBy(_.due_on).reverse
-    .map($m => CurrentMilestoneName($m.title)).head
+    .map(_.toAttrs).head
 }

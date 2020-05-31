@@ -25,9 +25,9 @@ object GitHubApi extends GitHub {
 
   override def issue: String = ???
 
-  override def create(t: Title, b: Body, l: LabelName, a: AssigneeName): String = post(
+  override def create(t: Title, b: Body, l: LabelName, a: Option[AssigneeName], m: CurrentMilestoneNumber): String = post(
     s"https://api.github.com/repos/${config.owner}/${config.repo}/issues",
-    data = Obj("title" -> t.v, "body" -> b.v, "labels" -> Arr(l.v), "assignee" -> a.v).render(),
+    data = Obj("title" -> t.v, "body" -> b.v, "labels" -> Arr(l.v), "assignee" -> a.map(_.v).getOrElse("").toString, "milestone" -> m.v.toString),
     headers = Map("Authorization" -> s"token ${config.gToken}")
   ).text
 }

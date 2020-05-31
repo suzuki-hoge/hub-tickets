@@ -2,6 +2,8 @@ package command.domain.issue
 
 import attrs.domain._
 
+import scala.language.implicitConversions
+
 object Helper {
   implicit def intToIssueNumber(n: Int): IssueNumber = IssueNumber(n)
 
@@ -19,13 +21,11 @@ object Helper {
 
   implicit def strToAssigneeNames(s: String): Option[AssigneeName] = Some(AssigneeName(s))
 
-  implicit def strToPipelineId(v: String): PipelineId = PipelineId(v)
+  implicit def strToPipelineId(s: String): PipelineId = PipelineId(s)
 
-  implicit def strToPipelineIdOpt(v: String): Option[PipelineId] = Some(PipelineId(v))
+  implicit def strToPipelineIdOpt(s: String): Option[PipelineId] = Some(PipelineId(s))
 
-  implicit def strToMilestoneName(v: String): MilestoneName = MilestoneName(v)
-
-  implicit def strToCurrentMilestoneName(v: String): CurrentMilestoneName = CurrentMilestoneName(v)
+  implicit def intToCurrentMilestoneNumber(n: Int): CurrentMilestoneNumber = CurrentMilestoneNumber(n)
 
   implicit def intToEstimate(n: Int): Estimate = Estimate(n)
 
