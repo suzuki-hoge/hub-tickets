@@ -20,6 +20,8 @@ trait GitHub {
   def close(oic: OriginIssueClosing): Unit
 
   def assign(n: IssueNumber, a: AssigneeName): Unit
+
+  def create(m: Milestone): String
 }
 
 object GitHub {
@@ -58,10 +60,20 @@ object $Assignee {
   implicit val jsonReads: Reads[$Assignee] = Json.reads[$Assignee]
 }
 
-case class $Milestone(number: Int, due_on: String) {
-  def toAttrs: CurrentMilestoneNumber = CurrentMilestoneNumber(number)
+case class $Milestone(number: Int, title: String, due_on: String) {
+  def toCurrent: CurrentMilestoneNumber = CurrentMilestoneNumber(number)
+
+  def toNumber: MilestoneNumber = MilestoneNumber(number)
 }
 
 object $Milestone {
   implicit val jsonReads: Reads[$Milestone] = Json.reads[$Milestone]
+}
+
+case class $MilestoneNumber(number: Int) {
+  def toAttrs: MilestoneNumber = MilestoneNumber(number)
+}
+
+object $MilestoneNumber {
+  implicit val jsonReads: Reads[$MilestoneNumber] = Json.reads[$MilestoneNumber]
 }

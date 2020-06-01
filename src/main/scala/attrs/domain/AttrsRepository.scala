@@ -13,5 +13,5 @@ trait AttrsRepository {
 
   // create
 
-  def create(milestone: Milestone): Unit
+  def create(milestone: Milestone): Option[MilestoneNumber]
 }

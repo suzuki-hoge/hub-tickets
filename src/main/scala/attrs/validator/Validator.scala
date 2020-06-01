@@ -88,4 +88,30 @@ object Validator {
     case _      => Left("invalid estimate format")
     //@formatter:on
   }
+
+  def milestoneName(v: Value): Either[String, MilestoneName] = v match {
+    //@formatter:off
+    case Str(s) => Right(MilestoneName(s))
+    case Null   => Left("no milestone name specified")
+    case _      => Left("invalid milestone name format")
+    //@formatter:on
+  }
+
+  def milestoneStart(v: Value): Either[String, MilestoneStart] = v match {
+    //@formatter:off
+    case Str(s) if s.matches("""\d{4}-\d{2}-\d{2}""") => Right(MilestoneStart(s"${s}T00:00:00+09:00"))
+    case Str(_)                                       => Left("date format is yyyy-mm-dd")
+    case Null                                         => Left("no milestone start specified")
+    case _                                            => Left("invalid milestone start format")
+    //@formatter:on
+  }
+
+  def milestoneEnd(v: Value): Either[String, MilestoneEnd] = v match {
+    //@formatter:off
+    case Str(s) if s.matches("""\d{4}-\d{2}-\d{2}""") => Right(MilestoneEnd(s"${s}T00:00:00+09:00"))
+    case Str(_)                                       => Left("date format is yyyy-mm-dd")
+    case Null                                         => Left("no milestone end specified")
+    case _                                            => Left("invalid milestone end format")
+    //@formatter:on
+  }
 }

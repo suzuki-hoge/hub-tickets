@@ -16,6 +16,8 @@ trait ZenHub {
   def setEstimate(n: IssueNumber, e: Estimate): Unit
 
   def subtraction(s: EstimateSubtraction): Unit
+
+  def setStart(n: MilestoneNumber, m: Milestone): Unit
 }
 
 object ZenHub {

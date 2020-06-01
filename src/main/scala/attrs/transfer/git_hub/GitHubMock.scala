@@ -18,8 +18,8 @@ object GitHubMock extends GitHub {
 
   override def milestones: String =
     """[
-      |  { "number": 1, "due_on": "2020-04-07T00:00:00Z" },
-      |  { "number": 2, "due_on": "2020-04-14T00:00:00Z" }
+      |  { "number": 1, "title": "sprint 1", "due_on": "2020-04-07T00:00:00Z" },
+      |  { "number": 2, "title": "sprint 2", "due_on": "2020-04-14T00:00:00Z" }
       |]""".stripMargin
 
   override def issue(n: IssueNumber): String =
@@ -46,4 +46,9 @@ object GitHubMock extends GitHub {
   override def close(oic: OriginIssueClosing): Unit = ()
 
   override def assign(n: IssueNumber, a: AssigneeName): Unit = ()
+
+  override def create(m: Milestone): String =
+    """{
+      |  "number": 1
+      |}""".stripMargin
 }

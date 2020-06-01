@@ -1,6 +1,6 @@
 package command.domain.issue
 
-import attrs.domain.IssueNumber
+import attrs.domain.{IssueNumber, Milestone}
 
 trait IssueRepository {
   def findOne(n: IssueNumber): Issue

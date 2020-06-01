@@ -1,6 +1,6 @@
 package attrs.transfer.zen_hub
 
-import attrs.domain.{Estimate, IssueNumber, PipelineId}
+import attrs.domain.{Estimate, IssueNumber, Milestone, MilestoneNumber, PipelineId}
 import command.domain.issue.EstimateSubtraction
 import requests.{get, post, put}
 import store.Config
@@ -35,4 +35,10 @@ object ZenHubApi extends ZenHub {
   )
 
   override def subtraction(s: EstimateSubtraction): Unit = setEstimate(s.n, s.e)
+
+  override def setStart(n: MilestoneNumber, m: Milestone): Unit = post(
+    s"https://api.zenhub.io/p1/repositories/${config.rId}/milestones/${n.v}/start_date",
+    data = Seq("start_date" -> m.start.v),
+    headers = Map("X-Authentication-Token" -> config.zToken)
+  )
 }

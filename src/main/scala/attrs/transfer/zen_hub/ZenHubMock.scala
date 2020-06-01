@@ -1,6 +1,6 @@
 package attrs.transfer.zen_hub
 
-import attrs.domain.{Estimate, IssueNumber, PipelineId}
+import attrs.domain.{Estimate, IssueNumber, Milestone, MilestoneNumber, PipelineId}
 import command.domain.issue.EstimateSubtraction
 
 object ZenHubMock extends ZenHub {
@@ -28,4 +28,6 @@ object ZenHubMock extends ZenHub {
   override def setEstimate(n: IssueNumber, e: Estimate): Unit = ()
 
   override def subtraction(s: EstimateSubtraction): Unit = ()
+
+  override def setStart(n: MilestoneNumber, m: Milestone): Unit = ()
 }

@@ -1,3 +1,4 @@
+import attrs.domain.Milestone
 import attrs.transfer.AttrsRepositoryImpl
 import attrs.transfer.git_hub.GitHub
 import attrs.transfer.zen_hub.ZenHub
@@ -89,7 +90,6 @@ object Main extends MainRoutes {
       .fold(s => Obj("error" -> s), n => Obj("number" -> n.v))
   }
 
-
   @postJson("/command/issue/assign")
   def assign(number: Value, assignee: Value): Obj = {
     val store = Store.read
@@ -100,6 +100,17 @@ object Main extends MainRoutes {
     } yield AssignRequest(n, a))
       .map(issues.assign)
       .fold(s => Obj("error" -> s), _ => Obj())
+  }
+
+  @postJson("/command/milestone/create")
+  def create(name: Value, start: Value, end: Value): Obj = {
+    (for {
+      n <- V.milestoneName(name)
+      s <- V.milestoneStart(start)
+      e <- V.milestoneEnd(end)
+    } yield Milestone(n, s, e))
+      .map(attrs.create)
+      .fold(s => Obj("error" -> s), n => Obj("result" -> n.map(_ => "created").getOrElse("already created ( no change )")))
   }
 
   initialize()

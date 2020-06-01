@@ -50,4 +50,10 @@ object GitHubApi extends GitHub {
     data = obj,
     headers = Map("Authorization" -> s"token ${config.gToken}")
   )
+
+  override def create(m: Milestone): String = post(
+    s"https://api.github.com/repos/${config.owner}/${config.repo}/milestones",
+    data = Obj("title" -> m.name.v, "due_on" -> m.end.v),
+    headers = Map("Authorization" -> s"token ${config.gToken}")
+  ).text
 }
