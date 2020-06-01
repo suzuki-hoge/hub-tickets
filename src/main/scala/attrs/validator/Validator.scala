@@ -46,6 +46,15 @@ object Validator {
     //@formatter:on
   }
 
+  def assigneeName(v: Value, as: Seq[Assignee]): Either[String, AssigneeName] = v match {
+    //@formatter:off
+    case Str(s) if as.exists(_.name.v == s) => Right(AssigneeName(s))
+    case Null                               => Left("no assignee specified")
+    case Str(_)                             => Left("no such assignee")
+    case _                                  => Left("invalid assignee format")
+    //@formatter:on
+  }
+
   def assigneeNameOpt(v: Value, as: Seq[Assignee]): Either[String, Option[AssigneeName]] = v match {
     //@formatter:off
     case Str(s) if as.exists(_.name.v == s) => Right(Some(AssigneeName(s)))

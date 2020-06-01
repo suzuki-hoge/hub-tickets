@@ -4,7 +4,7 @@ import attrs.transfer.zen_hub.ZenHub
 import attrs.validator.{Validator => V}
 import cask.endpoints.postJson
 import cask.{MainRoutes, get}
-import command.domain.issue.{CreateRequest, OriginEstimateIsLessThanNewEstimate}
+import command.domain.issue.{AssignRequest, CreateRequest, OriginEstimateIsLessThanNewEstimate}
 import command.transfer.issue.IssueRepositoryImpl
 import store.{Config, Store}
 import ujson.{Arr, Obj, Value}
@@ -87,6 +87,19 @@ object Main extends MainRoutes {
     } yield req)
       .map(issues.cut)
       .fold(s => Obj("error" -> s), n => Obj("number" -> n.v))
+  }
+
+
+  @postJson("/command/issue/assign")
+  def assign(number: Value, assignee: Value): Obj = {
+    val store = Store.read
+
+    (for {
+      n <- V.number(number)
+      a <- V.assigneeName(assignee, store.as)
+    } yield AssignRequest(n, a))
+      .map(issues.assign)
+      .fold(s => Obj("error" -> s), _ => Obj())
   }
 
   initialize()

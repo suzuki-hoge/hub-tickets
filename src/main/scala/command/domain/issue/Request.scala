@@ -25,3 +25,5 @@ case class Comment(srcN: IssueNumber, action: String, dstE: Estimate) {
 case class EstimateSubtraction(n: IssueNumber, e: Estimate)
 
 case class OriginIssueClosing(n: IssueNumber)
+
+case class AssignRequest(n: IssueNumber, a: AssigneeName)

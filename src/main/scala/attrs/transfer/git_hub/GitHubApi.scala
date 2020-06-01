@@ -41,9 +41,13 @@ object GitHubApi extends GitHub {
     headers = Map("Authorization" -> s"token ${config.gToken}")
   )
 
-  override def close(oic: OriginIssueClosing): Unit = patch(
-    s"https://api.github.com/repos/${config.owner}/${config.repo}/issues/${oic.n.v}",
-    data = Obj("state" -> "closed"),
+  override def close(oic: OriginIssueClosing): Unit = update(oic.n, Obj("state" -> "closed"))
+
+  override def assign(n: IssueNumber, a: AssigneeName): Unit = update(n, Obj("assignee" -> a.v))
+
+  private def update(n: IssueNumber, obj: Obj): Unit = patch(
+    s"https://api.github.com/repos/${config.owner}/${config.repo}/issues/${n.v}",
+    data = obj,
     headers = Map("Authorization" -> s"token ${config.gToken}")
   )
 }

@@ -44,4 +44,6 @@ object GitHubMock extends GitHub {
   override def comment(n: IssueNumber, message: String): Unit = ()
 
   override def close(oic: OriginIssueClosing): Unit = ()
+
+  override def assign(n: IssueNumber, a: AssigneeName): Unit = ()
 }

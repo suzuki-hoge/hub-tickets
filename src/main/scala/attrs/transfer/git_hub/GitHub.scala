@@ -18,6 +18,8 @@ trait GitHub {
   def comment(n: IssueNumber, message: String): Unit
 
   def close(oic: OriginIssueClosing): Unit
+
+  def assign(n: IssueNumber, a: AssigneeName): Unit
 }
 
 object GitHub {

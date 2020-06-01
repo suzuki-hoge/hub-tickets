@@ -10,4 +10,6 @@ trait IssueRepository {
   def copy(req: CopyRequest): IssueNumber
 
   def cut(req: CutRequest): IssueNumber
+
+  def assign(req: AssignRequest): Unit
 }

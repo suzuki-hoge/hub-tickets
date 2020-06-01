@@ -53,4 +53,6 @@ case class IssueRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends IssueRepo
 
     n
   }
+
+  override def assign(req: AssignRequest): Unit = gitHub.assign(req.n, req.a)
 }
