@@ -8,13 +8,13 @@ import play.api.libs.json.Json
 
 case class IssueRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends IssueRepository {
   override def findOne(n: IssueNumber): Issue = {
-    val g = Json.parse(gitHub.issue)
+    val g = Json.parse(gitHub.issue(n))
       .validate[$GIssue].get
 
-    val p = (Json.parse(zenHub.setPipeline(n)) \ "pipeline")
+    val p = (Json.parse(zenHub.pipeline(n)) \ "pipeline")
       .validate[$PipelineId].get
 
-    val e = (Json.parse(zenHub.setEstimate(n)) \ "estimate")
+    val e = (Json.parse(zenHub.estimate(n)) \ "estimate")
       .validate[$Estimate].get
 
     Issue(
@@ -28,16 +28,7 @@ case class IssueRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends IssueRepo
     )
   }
 
-  override def create(req: CreateRequest): IssueNumber = {
-    val n = Json.parse(
-      gitHub.create(req.creation.t, req.creation.b.getOrElse(Body("")), req.creation.l, req.creation.a, req.creation.m)
-    ).validate[$IssueNumber].get.toAttrs
-
-    zenHub.setPipeline(n, req.creation.p)
-    zenHub.setEstimate(n, req.creation.e)
-
-    n
-  }
+  override def create(req: CreateRequest): IssueNumber = create(req.creation)
 
   override def copy(req: CopyRequest): IssueNumber = {
     println(req)
@@ -46,8 +37,24 @@ case class IssueRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends IssueRepo
   }
 
   override def cut(req: CutRequest): IssueNumber = {
-    println(req)
+    val dstN = create(req.creation)
 
-    IssueNumber(1)
+    gitHub.comment(req.comment.srcN, req.comment.to(dstN))
+    gitHub.comment(dstN, req.comment.from)
+    zenHub.subtraction(req.sub)
+    req.closing.foreach(gitHub.close)
+
+    dstN
+  }
+
+  private def create(c: Creation): IssueNumber = {
+    val n = Json.parse(
+      gitHub.create(c.t, c.b.getOrElse(Body("")), c.l, c.a, c.m)
+    ).validate[$IssueNumber].get.toAttrs
+
+    zenHub.setPipeline(n, c.p)
+    zenHub.setEstimate(n, c.e)
+
+    n
   }
 }

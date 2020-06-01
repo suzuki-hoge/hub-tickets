@@ -1,18 +1,9 @@
 package attrs.transfer.zen_hub
 
 import attrs.domain.{Estimate, IssueNumber, PipelineId}
+import command.domain.issue.EstimateSubtraction
 
 object ZenHubMock extends ZenHub {
-  override def setPipeline(n: IssueNumber): String =
-    """{
-      |  "pipeline": { "pipeline_id": "1" }
-      |}""".stripMargin
-
-  override def setEstimate(n: IssueNumber): String =
-    """{
-      |  "estimate": { "value": 5 }
-      |}""".stripMargin
-
   override def pipelines: String =
     """{
       |  "pipelines": [
@@ -22,7 +13,19 @@ object ZenHubMock extends ZenHub {
       |  ]
       |}""".stripMargin
 
+  override def pipeline(n: IssueNumber): String =
+    """{
+      |  "pipeline": { "pipeline_id": "1" }
+      |}""".stripMargin
+
+  override def estimate(n: IssueNumber): String =
+    """{
+      |  "estimate": { "value": 0.5 }
+      |}""".stripMargin
+
   override def setPipeline(n: IssueNumber, p: PipelineId): Unit = ()
 
   override def setEstimate(n: IssueNumber, e: Estimate): Unit = ()
+
+  override def subtraction(s: EstimateSubtraction): Unit = ()
 }

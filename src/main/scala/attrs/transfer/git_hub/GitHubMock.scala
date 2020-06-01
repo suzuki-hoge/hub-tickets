@@ -1,6 +1,7 @@
 package attrs.transfer.git_hub
 
 import attrs.domain._
+import command.domain.issue.OriginIssueClosing
 
 object GitHubMock extends GitHub {
   override def labels: String =
@@ -21,7 +22,7 @@ object GitHubMock extends GitHub {
       |  { "number": 2, "due_on": "2020-04-14T00:00:00Z" }
       |]""".stripMargin
 
-  override def issue: String =
+  override def issue(n: IssueNumber): String =
     """{
       |  "number"   : 1,
       |  "title"    : "first issue",
@@ -39,4 +40,8 @@ object GitHubMock extends GitHub {
       |  "number": 1
       |}""".stripMargin
   }
+
+  override def comment(n: IssueNumber, message: String): Unit = ()
+
+  override def close(oic: OriginIssueClosing): Unit = ()
 }

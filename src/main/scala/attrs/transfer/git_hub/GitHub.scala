@@ -1,6 +1,7 @@
 package attrs.transfer.git_hub
 
 import attrs.domain._
+import command.domain.issue.OriginIssueClosing
 import play.api.libs.json.{Json, Reads}
 
 trait GitHub {
@@ -10,9 +11,13 @@ trait GitHub {
 
   def milestones: String
 
-  def issue: String
+  def issue(n: IssueNumber): String
 
   def create(t: Title, b: Body, l: LabelName, a: Option[AssigneeName], m: CurrentMilestoneNumber): String
+
+  def comment(n: IssueNumber, message: String): Unit
+
+  def close(oic: OriginIssueClosing): Unit
 }
 
 object GitHub {

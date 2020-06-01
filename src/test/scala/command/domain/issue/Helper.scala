@@ -27,7 +27,7 @@ object Helper {
 
   implicit def intToCurrentMilestoneNumber(n: Int): CurrentMilestoneNumber = CurrentMilestoneNumber(n)
 
-  implicit def intToEstimate(n: Int): Estimate = Estimate(n)
+  implicit def floatToEstimate(n: Float): Estimate = Estimate(n)
 
-  implicit def intToEstimateOpt(n: Int): Option[Estimate] = Some(Estimate(n))
+  implicit def floatToEstimateOpt(n: Float): Option[Estimate] = Some(Estimate(n))
 }
