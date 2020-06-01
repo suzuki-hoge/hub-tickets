@@ -22,7 +22,7 @@ class IssueTest extends FunSuite {
 
     assert(
       act == CopyRequest(
-        Creation("title_2", None, "label_1", "assignee_1", "pipeline_1", 2, 3f)
+        Creation("title_2", "body_2", "label_1", "assignee_1", "pipeline_1", 2, 3f)
       )
     )
   }

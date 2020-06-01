@@ -3,11 +3,11 @@ import attrs.transfer.git_hub.GitHub
 import attrs.transfer.zen_hub.ZenHub
 import attrs.validator.{Validator => V}
 import cask.endpoints.postJson
-import cask.{MainRoutes, Request, get}
+import cask.{MainRoutes, get}
 import command.domain.issue.{CreateRequest, OriginEstimateIsLessThanNewEstimate}
 import command.transfer.issue.IssueRepositoryImpl
 import store.{Config, Store}
-import ujson.{Arr, Obj}
+import ujson.{Arr, Obj, Value}
 
 object Main extends MainRoutes {
 
@@ -22,37 +22,65 @@ object Main extends MainRoutes {
   Store.initialize(attrs)
 
   @get("/attrs/labels")
-  def labels(request: Request): Arr = Arr(
+  def labels(): Arr = Arr(
     attrs.labels.map(label => Obj("name" -> label.name.v, "color" -> label.color.v)): _*
   )
 
   @get("/attrs/assignees")
-  def assignees(request: Request): Arr = Arr(
+  def assignees(): Arr = Arr(
     attrs.assignees.map(assignee => Obj("name" -> assignee.name.v, "icon" -> assignee.icon.v)): _*
   )
 
   @get("/attrs/pipelines")
-  def pipelines(request: Request): Arr = Arr(
+  def pipelines(): Arr = Arr(
     attrs.pipelines.map(pipeline => Obj("name" -> pipeline.name.v)): _*
   )
 
   @postJson("/command/issue/create")
-  def create(title: String, body: String, label: String, assignee: String, pipeline: String, estimate: Float): Obj = {
+  def create(title: Value, body: Value, label: Value, assignee: Value, pipeline: Value, estimate: Value): Obj = {
     val store = Store.read
 
     (for {
-      t <- V.title(title); b <- V.bodyOpt(body); l <- V.labelName(label, store.ls); a <- V.assigneeNameOpt(assignee, store.as); p <- V.pipelineIdOpt(pipeline, store.ps); e <- V.estimate(estimate)
+      t <- V.title(title)
+      b <- V.bodyOpt(body)
+      l <- V.labelName(label, store.ls)
+      a <- V.assigneeNameOpt(assignee, store.as)
+      p <- V.pipelineIdOpt(pipeline, store.ps)
+      e <- V.estimate(estimate)
     } yield CreateRequest.of(t, b, l, a, p, e, store.defP, attrs.currentMilestoneNumber))
       .map(issues.create)
       .fold(s => Obj("error" -> s), n => Obj("number" -> n.v))
   }
 
-  @postJson("/command/issue/cut")
-  def cut(number: Int, title: String, body: String, label: String, assignee: String, pipeline: String, estimate: Float): Obj = {
+  @postJson("/command/issue/copy")
+  def copy(number: Value, title: Value, body: Value, label: Value, assignee: Value, pipeline: Value, estimate: Value): Obj = {
     val store = Store.read
 
     (for {
-      n <- V.number(number); t <- V.title(title); b <- V.bodyOpt(body); l <- V.labelNameOpt(label, store.ls); a <- V.assigneeNameOpt(assignee, store.as); p <- V.pipelineIdOpt(pipeline, store.ps); e <- V.estimate(estimate)
+      n <- V.number(number)
+      t <- V.title(title)
+      b <- V.bodyOpt(body)
+      l <- V.labelNameOpt(label, store.ls)
+      a <- V.assigneeNameOpt(assignee, store.as)
+      p <- V.pipelineIdOpt(pipeline, store.ps)
+      e <- V.estimateOpt(estimate)
+    } yield issues.findOne(n).copy(t, b, l, a, p, e, attrs.currentMilestoneNumber))
+      .map(issues.copy)
+      .fold(s => Obj("error" -> s), n => Obj("number" -> n.v))
+  }
+
+  @postJson("/command/issue/cut")
+  def cut(number: Value, title: Value, body: Value, label: Value, assignee: Value, pipeline: Value, estimate: Value): Obj = {
+    val store = Store.read
+
+    (for {
+      n <- V.number(number)
+      t <- V.title(title)
+      b <- V.bodyOpt(body)
+      l <- V.labelNameOpt(label, store.ls)
+      a <- V.assigneeNameOpt(assignee, store.as)
+      p <- V.pipelineIdOpt(pipeline, store.ps)
+      e <- V.estimate(estimate)
       req <- issues.findOne(n).cut(t, b, l, a, p, e, attrs.currentMilestoneNumber).left.map {
         case OriginEstimateIsLessThanNewEstimate => "origin estimate is less than new estimate"
       }

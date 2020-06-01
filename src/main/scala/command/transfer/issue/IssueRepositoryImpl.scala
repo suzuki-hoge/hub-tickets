@@ -30,11 +30,7 @@ case class IssueRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends IssueRepo
 
   override def create(req: CreateRequest): IssueNumber = create(req.creation)
 
-  override def copy(req: CopyRequest): IssueNumber = {
-    println(req)
-
-    IssueNumber(1)
-  }
+  override def copy(req: CopyRequest): IssueNumber = create(req.creation)
 
   override def cut(req: CutRequest): IssueNumber = {
     val dstN = create(req.creation)
