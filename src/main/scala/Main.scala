@@ -5,7 +5,7 @@ import attrs.transfer.zen_hub.ZenHub
 import attrs.validator.{Validator => V}
 import cask.endpoints.postJson
 import cask.{MainRoutes, get}
-import command.domain.issue.{AssignRequest, CreateRequest, OriginEstimateIsLessThanNewEstimate}
+import command.domain.issue._
 import command.transfer.issue.IssueRepositoryImpl
 import store.{Config, Store}
 import ujson.{Arr, Obj, Value}
@@ -65,7 +65,10 @@ object Main extends MainRoutes {
       a <- V.assigneeNameOpt(assignee, store.as)
       p <- V.pipelineIdOpt(pipeline, store.ps)
       e <- V.estimateOpt(estimate)
-    } yield issues.findOne(n).copy(t, b, l, a, p, e, attrs.currentMilestoneNumber))
+      req <- issues.findOne(n).copy(t, b, l, a, p, e, attrs.currentMilestoneNumber).left.map {
+        case CopyOnClosedIssueWithoutPipelineSpecification => "copy on closed issue without pipeline specification"
+      }
+    } yield req)
       .map(issues.copy)
       .fold(s => Obj("error" -> s), n => Obj("number" -> n.v))
   }
@@ -83,6 +86,7 @@ object Main extends MainRoutes {
       p <- V.pipelineIdOpt(pipeline, store.ps)
       e <- V.estimate(estimate)
       req <- issues.findOne(n).cut(t, b, l, a, p, e, attrs.currentMilestoneNumber).left.map {
+        case CutOnClosedIssue => "cut on closed issue"
         case OriginEstimateIsLessThanNewEstimate => "origin estimate is less than new estimate"
       }
     } yield req)

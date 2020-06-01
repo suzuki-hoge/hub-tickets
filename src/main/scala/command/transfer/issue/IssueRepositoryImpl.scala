@@ -12,10 +12,10 @@ case class IssueRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends IssueRepo
       .validate[$GIssue].get
 
     val p = (Json.parse(zenHub.pipeline(n)) \ "pipeline")
-      .validate[$PipelineId].get
+      .validate[$PipelineId].map(_.toAttrs).getOrElse(PipelineId.closed)
 
     val e = (Json.parse(zenHub.estimate(n)) \ "estimate")
-      .validate[$Estimate].get
+      .validate[$Estimate].get.toAttrs
 
     Issue(
       IssueNumber(g.number),
@@ -23,8 +23,8 @@ case class IssueRepositoryImpl(gitHub: GitHub, zenHub: ZenHub) extends IssueRepo
       Body(g.body),
       g.labels.head.toAttrs.name,
       g.assignees.headOption.map(_.toAttrs.name),
-      p.toAttrs,
-      e.toAttrs
+      p,
+      e
     )
   }
 

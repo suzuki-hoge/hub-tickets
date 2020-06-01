@@ -7,8 +7,6 @@ import scala.language.implicitConversions
 object Helper {
   implicit def intToIssueNumber(n: Int): IssueNumber = IssueNumber(n)
 
-  implicit def strToBaseTitleOpt(s: String): Option[BaseTitle] = Some(BaseTitle(s))
-
   implicit def strToTitle(s: String): Title = Title(s)
 
   implicit def strToBody(s: String): Body = Body(s)

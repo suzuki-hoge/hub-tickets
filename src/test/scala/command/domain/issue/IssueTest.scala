@@ -6,12 +6,13 @@ import org.scalatest.FunSuite
 class IssueTest extends FunSuite {
 
   val sut = Issue(1, "title_1", "body_2", "label_1", "assignee_1", "pipeline_1", 3f)
+  val closedSut = Issue(1, "title_1", "body_2", "label_1", "assignee_1", "closed", 3f)
 
   test("copy - all specified") {
     val act = sut.copy("title_2", "body_2", "label_2", "assignee_2", "pipeline_2", 3f, 2)
 
     assert(
-      act == CopyRequest(
+      act.right.get == CopyRequest(
         Creation("title_2", "body_2", "label_2", "assignee_2", "pipeline_2", 2, 3f)
       )
     )
@@ -21,9 +22,27 @@ class IssueTest extends FunSuite {
     val act = sut.copy("title_2", None, None, None, None, None, 2)
 
     assert(
-      act == CopyRequest(
+      act.right.get == CopyRequest(
         Creation("title_2", "body_2", "label_1", "assignee_1", "pipeline_1", 2, 3f)
       )
+    )
+  }
+
+  test("copy - all specified ( origin is closed )") {
+    val act = closedSut.copy("title_2", "body_2", "label_2", "assignee_2", "pipeline_2", 3f, 2)
+
+    assert(
+      act.right.get == CopyRequest(
+        Creation("title_2", "body_2", "label_2", "assignee_2", "pipeline_2", 2, 3f)
+      )
+    )
+  }
+
+  test("copy - no specified ( origin is closed )") {
+    val act = closedSut.copy("title_2", None, None, None, None, None, 2)
+
+    assert(
+      act.left.get == CopyOnClosedIssueWithoutPipelineSpecification
     )
   }
 
@@ -53,8 +72,24 @@ class IssueTest extends FunSuite {
     )
   }
 
-  test("cut - failure") {
-    val act = sut.cut("title_2", None, None, None, None, 4f, 2)
+  test("cut - all specified ( origin is closed )") {
+    val act = closedSut.cut("title_2", "body_2", "label_2", "assignee_2", "pipeline_2", 3f, 2)
+
+    assert(
+      act.left.get == CutOnClosedIssue
+    )
+  }
+
+  test("cut - no specified ( origin is closed )") {
+    val act = closedSut.cut("title_2", None, None, None, None, 2f, 2)
+
+    assert(
+      act.left.get == CutOnClosedIssue
+    )
+  }
+
+  test("cut - all specified ( large estimate )") {
+    val act = sut.cut("title_2", "body_2", "label_2", "assignee_2", "pipeline_2", 4f, 2)
 
     assert(
       act.left.get == OriginEstimateIsLessThanNewEstimate

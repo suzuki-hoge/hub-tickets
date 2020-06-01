@@ -83,9 +83,12 @@ milestone | -      | -          | latest milestone only
 #### out ( failure )
 ```json
 {
-  "error": "no such label"
+  "error": "..."
 }
 ```
+
+#### errors
++ validation error
 
 ### /command/issue/copy ( POST )
 + create new issue by copying existing issue.
@@ -111,9 +114,13 @@ milestone | -      | -          | latest milestone only
 #### out ( failure )
 ```json
 {
-  "error": "no such label"
+  "error": "..."
 }
 ```
+
+#### errors
++ validation error
++ copy on closed issue without pipeline specification
 
 ### /command/issue/cut ( POST )
 + create new issue by cutting existing issue, then comment `cut from #1` to new issue and comment `cut to #2 ( 5 sp )` to origin issue.
@@ -140,9 +147,14 @@ milestone | -      | -          | latest milestone only
 #### out ( failure )
 ```json
 {
-  "error": "no such label"
+  "error": "..."
 }
 ```
+
+#### errors
++ validation error
++ cut on closed issue
++ origin estimate is less than new estimate
 
 ### /command/issue/assign ( POST )
 + assign issue.
@@ -162,9 +174,12 @@ assignee | string | require    | -
 #### out ( failure )
 ```json
 {
-  "error": "no such assignee"
+  "error": "..."
 }
 ```
+
+#### errors
+no errors.
 
 ### /command/milestone/create ( POST )
 + create new milestone.
@@ -194,7 +209,10 @@ or
 #### out ( failure )
 ```json
 {
-  "error": "date format is yyyy-mm-dd"
+  "error": "..."
 }
 ```
+
+#### errors
+no errors.
 
