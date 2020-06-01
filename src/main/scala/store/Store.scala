@@ -13,7 +13,13 @@ object Store {
     val as = attrs.assignees
     val ps = attrs.pipelines
 
-    val store = Store(ls, as, ps, ps.find(_.name.v == Config.read.defaultPipelineName).head.asDefault)
+    val config = Config.read
+    val store = Store(
+      ls,
+      as.filter(a => config.presetAssignees.contains(a.name.v)),
+      ps,
+      ps.find(_.name.v == Config.read.defaultPipeline).head.asDefault
+    )
 
     val oos = new ObjectOutputStream(new FileOutputStream("/tmp/store"))
     try {

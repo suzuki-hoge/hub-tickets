@@ -24,17 +24,17 @@ object Main extends MainRoutes {
 
   @get("/attrs/labels")
   def labels(): Arr = Arr(
-    attrs.labels.map(label => Obj("name" -> label.name.v, "color" -> label.color.v)): _*
+    Store.read.ls.map(label => Obj("name" -> label.name.v, "color" -> label.color.v)): _*
   )
 
   @get("/attrs/assignees")
   def assignees(): Arr = Arr(
-    attrs.assignees.map(assignee => Obj("name" -> assignee.name.v, "icon" -> assignee.icon.v)): _*
+    Store.read.as.map(assignee => Obj("name" -> assignee.name.v, "icon" -> assignee.icon.v)): _*
   )
 
   @get("/attrs/pipelines")
   def pipelines(): Arr = Arr(
-    attrs.pipelines.map(pipeline => Obj("name" -> pipeline.name.v)): _*
+    Store.read.ps.map(pipeline => Obj("name" -> pipeline.name.v)): _*
   )
 
   @postJson("/command/issue/create")

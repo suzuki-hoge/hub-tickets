@@ -4,7 +4,7 @@ import play.api.libs.json.{Json, Reads}
 
 import scala.io.Source
 
-case class Config(owner: String, repo: String, rId: String, gToken: String, zToken: String, defaultPipelineName: String, presetAssignees: Seq[String])
+case class Config(owner: String, repo: String, rId: String, gToken: String, zToken: String, defaultPipeline: String, presetAssignees: Seq[String])
 
 object Config {
   private var dir: Option[String] = None
@@ -29,14 +29,14 @@ object Config {
       board.repositoryId,
       personal.githubToken,
       personal.zenhubToken,
-      board.defaultPipelineName,
+      board.defaultPipeline,
       board.presetAssignees
     )
   }
 
   // parsers
 
-  case class Board(owner: String, repository: String, repositoryId: String, defaultPipelineName: String, presetAssignees: Seq[String])
+  case class Board(owner: String, repository: String, repositoryId: String, defaultPipeline: String, presetAssignees: Seq[String])
 
   object Board {
     implicit val jsonReads: Reads[Board] = Json.reads[Board]
